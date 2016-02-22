@@ -21,3 +21,19 @@ function calcNewCoords(angle, x, y) {
     };
 
 }
+
+function extend(Child, Parent) {
+
+    var F = function() {},
+        ChildPrototype = Child.prototype;
+
+    F.prototype = Parent.prototype;
+    Child.prototype = new F();
+    Child.prototype.constructor = Child;
+    Child.superclass = Parent.prototype;
+
+    for(var prop in ChildPrototype){
+        Child.prototype[prop] = ChildPrototype[prop];
+    }
+
+}

@@ -1,4 +1,4 @@
-function BattleShip(container) {
+function HeavyBattleShip(container) {
     var me = this;
 
 

@@ -23,7 +23,6 @@ stats = new Stats();
 stats.domElement.style.position = "absolute";
 stats.domElement.style.top = "0px";
 stats.domElement.style.left = "0px";
-stats.domElement.style.top = "0px";
 document.body.appendChild(stats.domElement);
 
 // create the root of the scene graph
@@ -37,10 +36,10 @@ stage.addChild(tilingSprite);
 
 
 
-var ship = new BattleShip(stage);
+var ship = new HeavyBattleShip(stage);
 ship.init();
 
-var ship2 = new BattleShip(stage);
+var ship2 = new UserControlShip(stage);
 ship2.init();
 ship2.x = 800;
 ship2.y = 650;
@@ -105,11 +104,13 @@ renderer.view.addEventListener('mouseup', function (event) {
 
 document.addEventListener('keydown', function (event) {
     ship.setKey(event.keyCode, true);
+    ship2.setKey(event.keyCode, true);
     //console.log(event.keyCode);
 });
 
 document.addEventListener('keyup', function (event) {
     ship.setKey(event.keyCode, false);
+    ship2.setKey(event.keyCode, false);
 });
 
 document.addEventListener("wheel", function (event) {
