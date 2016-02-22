@@ -81,7 +81,7 @@ renderer.view.addEventListener('mousedown', function (event) {
     if (event.which == 1) {
         //setTargetPosition(event.offsetX, event.offsetY);
         ship.fireCannons();
-        //ship2.fireCannons();
+        ship2.fireCannons();
     }
 
     if (event.which == 3) {
@@ -119,12 +119,10 @@ document.addEventListener("wheel", function (event) {
 
     if (delta > 0 && GAME_CONFIG.scale > GAME_CONFIG.minScale) {
         GAME_CONFIG.scale -= GAME_CONFIG.scaleStep;
-        zoomDir = 1;
     }
 
     if (delta < 0 && GAME_CONFIG.scale < GAME_CONFIG.maxScale) {
         GAME_CONFIG.scale += GAME_CONFIG.scaleStep;
-        zoomDir = -1;
     }
 
     stage.scale.x = GAME_CONFIG.scale;

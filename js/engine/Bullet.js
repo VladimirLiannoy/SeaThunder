@@ -59,15 +59,11 @@ function Bullet(x, y, rotation, targetX, targetY) {
         if (dist < me.reachTargetRadius) {
             me.targetReached = true;
             console.log('onTargetReached');
-            me.onTargetReached();
+            me.parentContainer.removeChild(item);
+            me.onTargetReached(me);
         }
     };
 
-    this.onTargetReached = function () {
-
-        me.parentContainer.removeChild(item);
-
-        Observer.fireEvent('targetReached', me);
-    }
+    this.onTargetReached = function () {};
 
 }

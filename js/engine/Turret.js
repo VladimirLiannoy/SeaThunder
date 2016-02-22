@@ -72,6 +72,9 @@ function Turret(myShip, config) {
 
         newBullet = new Bullet(x, y, rotation, me.myShip.target.x, me.myShip.target.y);
         newBullet.init(me.myShip.parentContainer);
+        newBullet.onTargetReached = function (bullet) {
+            bulletsFired.splice(bulletsFired.indexOf(bullet), 1);
+        }.bind(me);
 
         bulletsFired.push(newBullet);
 
