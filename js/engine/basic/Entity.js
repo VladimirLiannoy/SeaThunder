@@ -8,7 +8,7 @@ function Entity(params) {
 }
 
 Entity.prototype.update = function () {
-    for (var i = 0; this.children.length; i++) {
+    for (var i = 0; i < this.children.length; i++) {
         this.children[i].update();
     }
 };

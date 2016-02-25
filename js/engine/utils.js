@@ -22,9 +22,18 @@ function calcNewCoords(angle, x, y) {
 
 }
 
+function calcAngleBetween2Points(x1, y1, x2, y2) {
+    return Math.atan2((y1 - y2), (x1 - x2));
+}
+
+function calcDistBetween2Points(x1, y1, x2, y2) {
+    return Math.sqrt(Math.pow((x1 - x2), 2) + Math.pow((y1 - y2), 2));
+}
+
 function extend(Child, Parent) {
 
-    var F = function() {},
+    var F = function () {
+        },
         ChildPrototype = Child.prototype;
 
     F.prototype = Parent.prototype;
@@ -32,7 +41,7 @@ function extend(Child, Parent) {
     Child.prototype.constructor = Child;
     Child.superclass = Parent.prototype;
 
-    for(var prop in ChildPrototype){
+    for (var prop in ChildPrototype) {
         Child.prototype[prop] = ChildPrototype[prop];
     }
 

@@ -36,13 +36,17 @@ stage.addChild(tilingSprite);
 
 
 
-var ship = new HeavyBattleShip(stage);
-ship.init();
+var ship = new UserControlShip(CONFIG.battleshipConfig);
+ship.init(stage);
+ship.x = 500;
+ship.y = 500;
 
-var ship2 = new UserControlShip(stage);
-ship2.init();
-ship2.x = 800;
-ship2.y = 650;
+//var ship2 = new UserControlShip(CONFIG.battleshipConfig);
+//ship2.init(stage);
+//ship2.x = 800;
+//ship2.y = 650;
+
+
 
 
 // start animating
@@ -56,7 +60,7 @@ function animate() {
 
     // render the container
     ship.update();
-    ship2.update();
+    //ship2.update();
 
     renderer.render(stage);
     stats.end();
@@ -104,13 +108,13 @@ renderer.view.addEventListener('mouseup', function (event) {
 
 document.addEventListener('keydown', function (event) {
     ship.setKey(event.keyCode, true);
-    ship2.setKey(event.keyCode, true);
+    //ship2.setKey(event.keyCode, true);
     //console.log(event.keyCode);
 });
 
 document.addEventListener('keyup', function (event) {
     ship.setKey(event.keyCode, false);
-    ship2.setKey(event.keyCode, false);
+    //ship2.setKey(event.keyCode, false);
 });
 
 document.addEventListener("wheel", function (event) {
@@ -143,5 +147,5 @@ function setTargetPosition(mouseX, mouseY) {
         y = (mouseY - stage.position.y) / GAME_CONFIG.scale;
 
     ship.setPointerPos(x, y);
-    ship2.setPointerPos(x, y);
+    //ship2.setPointerPos(x, y);
 }

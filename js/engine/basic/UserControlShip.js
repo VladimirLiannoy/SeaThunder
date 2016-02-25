@@ -7,8 +7,6 @@ function UserControlShip(params){
 
     UserControlShip.superclass.constructor.call(me, params);
 
-    console.log(params);
-
     this.controls = {
         turnLeft: {
             keyCode: 65,
@@ -29,6 +27,14 @@ function UserControlShip(params){
     };
 
 }
+
+UserControlShip.prototype.update = function () {
+  var me = this;
+
+    me.processControls();
+
+    UserControlShip.superclass.update.call(me);
+};
 
 UserControlShip.prototype.processControls = function () {
     var me = this;
