@@ -22,7 +22,7 @@ function BattleShip(params) {
     this.x = 0;
     this.y = 0;
     this.rotation = 0;
-    this.worldRotation = 0;
+    //this.worldRotation = 0;
     this.acceleration = params.acceleration ? params.acceleration : 0.02;
     this.maxSpeed = params.maxSpeed ? params.maxSpeed : 2;
     this.currentSpeed = 0;

@@ -1,11 +1,11 @@
-function Bullet(x, y, cannonRotation, targetX, targetY) {
+function Bullet(x, y, targetX, targetY, missFactor) {
 
 
     this.bulletItem = null;
 
     this.x = x;
     this.y = y;
-    this.rotation = cannonRotation;
+    this.rotation = null;
     this.speed = 20;
     this.target = {
         x: targetX,

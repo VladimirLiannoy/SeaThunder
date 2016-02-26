@@ -2,6 +2,11 @@
  * Created by treem on 2/20/16.
  */
 
+
+CONST = {
+    pi_2: Math.PI * 2
+};
+
 function calcNewCoords(angle, x, y) {
     var matrixA = {
             11: Math.cos(angle),
@@ -30,7 +35,7 @@ function calcAngleBetween2PointsNorm(x1, y1, x2, y2) {
     var rez = Math.atan2((y2 - y1), (x2 - x1));
 
     if (rez < 0) {
-        return Math.PI * 2 + rez;
+        return CONST.pi_2 + rez;
     }
     else {
         return rez;
@@ -45,9 +50,54 @@ function calcDistBetween2Points(x1, y1, x2, y2) {
     return Math.sqrt(Math.pow((x1 - x2), 2) + Math.pow((y1 - y2), 2));
 }
 
-function isInRange(value, limit1, limit2){
+function isInRange(value, limit1, limit2) {
     return (value >= limit1 && value <= limit2) || (value <= limit1 && value >= limit2);
 }
+
+function isInViewDegree(testAngle, facing, range) {
+    var l1 = facing - range,
+        l2 = facing + range;
+
+    //Exeptional situation
+    if (l1 < 0 && isInRange(testAngle - CONST.pi_2, l1, facing)) {
+        l1 += CONST.pi_2;
+        l2 += CONST.pi_2;
+    }
+
+    //console.log(l1.toFixed(2), testAngle.toFixed(2), l2.toFixed(2));
+
+    return isInRange(testAngle, l1, l2);
+}
+
+function detectRotateDirection(curAngle, destAngle, rotationStep) {
+    var dir = 1;
+
+    if (destAngle > curAngle ) {
+        if(CONST.pi_2 - destAngle < destAngle) {
+            dir = -1;
+        }
+    } else {
+        dir = -1;
+    }
+
+    return dir;
+}
+
+//console.log(detectRotateDirection(350* PIXI.DEG_TO_RAD, 350 * PIXI.DEG_TO_RAD));
+//console.log(detectRotateDirection(0, 90 * PIXI.DEG_TO_RAD));
+
+function calcRotateRangeLimit(direction, facing, offset) {
+    return facing + offset;// < 0 ? direction + offset + Math.PI*2 : direction + offset;
+    return direction < 0 ? direction + offset + Math.PI * 2 : direction + offset;
+}
+
+
+console.log(isInViewDegree(250 * PIXI.DEG_TO_RAD, 0, 45 * PIXI.DEG_TO_RAD));
+console.log(isInViewDegree(350 * PIXI.DEG_TO_RAD, 0, 45 * PIXI.DEG_TO_RAD));
+console.log(isInViewDegree(1 * PIXI.DEG_TO_RAD, 0, 45 * PIXI.DEG_TO_RAD));
+console.log(isInViewDegree(40 * PIXI.DEG_TO_RAD, 0, 45 * PIXI.DEG_TO_RAD));
+console.log(isInViewDegree(50 * PIXI.DEG_TO_RAD, 0, 45 * PIXI.DEG_TO_RAD));
+
 
 function extend(Child, Parent) {
 

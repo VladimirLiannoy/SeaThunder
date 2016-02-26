@@ -9,41 +9,46 @@ CONFIG.battleshipConfig = {
 
     cannonsConfig: [
         {
-            x: 0,
-            y: 0,
+            x: 40,
+            y: 22,
             extraAngle: 90,
             rotateSpeed : 0.01,
-            facing: 270,
-            angleRange: 45
+            facing: 90,
+            angleRange: 45,
+            missFactor : 5,
+            rechargeTime : 1000
         },
-
-        {
-            x: -22,
-            y: -29,
-            extraAngle: 90,
-            rotateSpeed : 0.01,
-            facing: 270,
-            angleRange: 45
-        },
-
         {
             x: -40,
             y: 22,
             extraAngle: 90,
             rotateSpeed : 0.01,
             facing: 90,
-            angleRange: 45
+            angleRange: 45,
+            missFactor : 5,
+            rechargeTime : 1000
         },
 
         {
-            x: 60,
-            y: 0,
+            x: 40,
+            y: -22,
             extraAngle: 90,
             rotateSpeed : 0.01,
-            facing: 0,
+            facing: 270,
             angleRange: 45,
-            debug : true
-        }
+            missFactor : 5,
+            rechargeTime : 1000
+        },
+        {
+            x: -40,
+            y: -22,
+            extraAngle: 90,
+            rotateSpeed : 0.01,
+            facing: 270,
+            angleRange: 45,
+            missFactor : 5,
+            rechargeTime : 1000
+        },
 
     ],
 
