@@ -20,7 +20,7 @@ function Bullet(x, y, cannonRotation, targetX, targetY) {
 Bullet.prototype.init = function (container) {
     var me = this;
 
-    me.rotation = calcAngleBetween2Points(me.target.x, me.target.y, me.x, me.y);
+    me.rotation = calcAngleBetween2Points(me.x, me.y, me.target.x, me.target.y);
 
     me.bulletItem = new PIXI.Graphics();
 

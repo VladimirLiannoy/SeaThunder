@@ -22,10 +22,11 @@ function BattleShip(params) {
     this.x = 0;
     this.y = 0;
     this.rotation = 0;
+    this.worldRotation = 0;
     this.acceleration = params.acceleration ? params.acceleration : 0.02;
     this.maxSpeed = params.maxSpeed ? params.maxSpeed : 2;
     this.currentSpeed = 0;
-    this.rotationSpeed = params.rotationSpeed ? params.rotationSpeed : 0.002;
+    this.rotationSpeed = params.rotationSpeed ? params.rotationSpeed : 0.01;
     this.movingState = false;
 
     this.target = {
@@ -34,6 +35,8 @@ function BattleShip(params) {
     };
 
     this.aimItem = null;
+
+    this.aimTextItem = null;
 
 
 }
@@ -59,7 +62,14 @@ BattleShip.prototype.init = function (container) {
     me.aimItem = new PIXI.Graphics();
     me.aimItem.alpha = 0.5;
 
+    me.aimTextItem = new PIXI.Text('TEST', {font: '15px Arial', fill: 'red'}, 2);
+    me.aimTextItem.position = new PIXI.Point(0, 0);
+    me.aimTextItem.anchor.x = 0.5;
+    me.aimTextItem.anchor.y = 0;
+
     me.parentContainer.addChild(me.rootContainer);
+    me.parentContainer.addChild(me.aimItem);
+    me.parentContainer.addChild(me.aimTextItem);
 
 };
 
@@ -78,10 +88,11 @@ BattleShip.prototype.initCannons = function () {
     }
 };
 
-BattleShip.prototype.initTorpedo = function () {};
+BattleShip.prototype.initTorpedo = function () {
+};
 
-BattleShip.prototype.initTurrets = function () {};
-
+BattleShip.prototype.initTurrets = function () {
+};
 
 
 BattleShip.prototype.fireCannons = function () {
@@ -94,7 +105,7 @@ BattleShip.prototype.fireCannons = function () {
 };
 
 BattleShip.prototype.update = function () {
-    var me = this, dist;
+    var me = this, W_ROT;
 
     me.movingState = Math.abs(me.currentSpeed) >= me.acceleration ? true : false;
 
@@ -109,12 +120,22 @@ BattleShip.prototype.update = function () {
     me.rootContainer.position.y = me.y;
     me.rootContainer.rotation = me.rotation;
 
-    dist = 20;// calcDistBetween2Points(me.rootShip.target.x, me.rootShip.target.y, x, y);
+    //dist = calcDistBetween2Points(me.rootShip.target.x, me.rootShip.target.y, me.x, me.y);
     me.aimItem.clear();
-    me.aimItem.lineStyle(10, 0xf3a33f);
-    me.aimItem.moveTo(0, 0);
-    me.aimItem.lineTo(dist, 0);
+    me.aimItem.lineStyle(10, 0x003300);
+    me.aimItem.moveTo(me.x, me.y);
+    me.aimItem.lineTo(me.target.x, me.target.y);
     me.aimItem.endFill();
+
+    W_ROT = calcAngleBetween2PointsNorm(me.x, me.y, me.target.x, me.target.y);
+
+    me.worldRotation = W_ROT;
+
+    me.aimTextItem.position.x = me.target.x;
+    me.aimTextItem.position.y = me.target.y + 30;
+    me.aimTextItem.text = 'W_ROT: ' + W_ROT.toFixed(3) + '\n'
+        + 'S_ROT: ' + me.rotation.toFixed(3) + '\n'
+        + 'WS_ROT: ' + (W_ROT - me.rotation).toFixed(3);
 };
 
 BattleShip.prototype.accelerate = function () {

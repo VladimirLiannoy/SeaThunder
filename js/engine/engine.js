@@ -84,7 +84,7 @@ renderer.view.addEventListener('mousedown', function (event) {
     if (event.which == 1) {
         //setTargetPosition(event.offsetX, event.offsetY);
         ship.fireCannons();
-        ship2.fireCannons();
+        //ship2.fireCannons();
     }
 
     if (event.which == 3) {

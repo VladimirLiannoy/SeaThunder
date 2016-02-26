@@ -8,15 +8,23 @@ function Cannon(rootShip, _config) {
     this.cannonItem = null;
     this.cannonTextItem = null;
 
+    this.debug = _config.debug;
+
     this.x = _config.x;
     this.y = _config.y;
     //this.config = _config;
     this.rotation = 0;
     this.rotateSpeed = _config.rotateSpeed;
     this.radCompensation = _config.extraAngle * PIXI.DEG_TO_RAD;
-    this.radFrom = _config.angleFrom;
-    this.radTo = _config.angleTo;
-    this.canFire = false;
+
+    this.facingVector = new vec2(
+        Math.cos(_config.facing * PIXI.DEG_TO_RAD),
+        Math.sin(_config.facing * PIXI.DEG_TO_RAD)
+    );
+
+    this.facingAngle = _config.facing * PIXI.DEG_TO_RAD;
+
+    this.angleRange = _config.angleRange * PIXI.DEG_TO_RAD;
 
     this.missFactor = 5;
 
@@ -30,7 +38,7 @@ Cannon.prototype.init = function (container) {
     me.radFrom = me.recalcRotateAngleLimit(me.radFrom);
     me.radTo = me.recalcRotateAngleLimit(me.radTo);
 
-    me.rotation = me.radTo;////FIXXXX
+    me.rotation = me.facingAngle;////FIXXXX
 
     me.rootContainer = new PIXI.Container();
     me.rootContainer.position = new PIXI.Point(me.x, me.y);
@@ -46,7 +54,12 @@ Cannon.prototype.init = function (container) {
     me.rootContainer.addChild(me.cannonItem);
     me.rootContainer.addChild(me.aimItem);
 
-    me.cannonTextItem = new PIXI.Text('TEST', {font: '15px Arial', fill: 'red'}, 2);
+    me.cannonTextItem = new PIXI.Text('', {
+        font: '15px Arial',
+        fill: 'red',
+        stroke: 'black',
+        strokeThickness: 3
+    }, 4);
     me.cannonTextItem.position = new PIXI.Point(me.x, me.y + 30);
     me.cannonTextItem.anchor.set(0.5);
 
@@ -56,39 +69,108 @@ Cannon.prototype.init = function (container) {
     container.addChild(me.cannonTextItem);
 
     me.setupEvents();
+
+    console.log(this);
 };
+
+//Cannon.prototype.recalcRotateAngleLimit = function (angle) {
+//    return angle > 180 ? -(Math.PI * 2 - angle * PIXI.DEG_TO_RAD) : angle * PIXI.DEG_TO_RAD;
+//};
 
 Cannon.prototype.recalcRotateAngleLimit = function (angle) {
-    return angle > 180 ? -(Math.PI * 2 - angle * PIXI.DEG_TO_RAD) : angle * PIXI.DEG_TO_RAD;
+    return angle * PIXI.DEG_TO_RAD;
 };
 
-Cannon.prototype.update = function () {
-    var me = this, x, y, rad, radNorm, dist, newXY, rotateDiff;
+function calcRotateRangeLimit(direction, offset){
+    return direction + offset;
+}
 
-    newXY = calcNewCoords(me.rootShip.rotation, me.x, me.y);
+Cannon.prototype.update = function () {
+    var me = this,
+        x,
+        y,
+        sysRotation = me.rootShip.rotation,
+        newXY = new vec2(me.x, me.y).rotate(sysRotation),
+        rad,
+        radByShip,
+        dist,
+        targetVector = new vec2(me.rootShip.target.x, me.rootShip.target.y),
+        rotateDiff,
+        fromAngle = calcRotateRangeLimit(me.facingAngle, -me.angleRange),
+        toAngle = calcRotateRangeLimit(me.facingAngle, me.angleRange),//) % (Math.PI * 2),
+        normRadByShip,
+        newRotaion,
+        turnDir = 1;
 
     x = me.rootShip.x + newXY.x;
     y = me.rootShip.y + newXY.y;
 
-    rad = calcAngleBetween2Points(me.rootShip.target.x, me.rootShip.target.y, x, y);
+    rad = calcAngleBetween2Points(x, y, targetVector.x, targetVector.y);
 
-    radNorm = rad - (me.rootShip.rotation) % Math.PI;
+    radByShip = rad - sysRotation % (Math.PI * 2);
 
-    rotateDiff = Math.abs(me.rotation - radNorm);
 
-    //////CHECK
-    if (me.isInRotateRange(me.rotation)) {
+    //var currentPosition = new vec2(x, y),
+    //    facingVectorRotated = me.facingVector.rotate(me.rootShip.rotation), //facing
+    //    V = vecSubstr(targetVector, currentPosition),
+    //    targetAngle = Math.acos(vecScalarMult(facingVectorRotated.normalize(), V.normalize()));
 
-        if (rotateDiff < me.rotateSpeed) {
-            me.rotation += me.rotation > radNorm ? -rotateDiff : rotateDiff;
-            me.canFire = true;
-        } else {
-            me.rotation += me.rotation > radNorm ? -me.rotateSpeed : me.rotateSpeed;
-            me.canFire = false;
+    normRadByShip = radByShip < 0 ? radByShip + Math.PI * 2 : radByShip;
+    normRadByShip += normRadByShip < 0 ? Math.PI * 2 : 0;
+
+
+    //IF WE ARE IN WORKING ZONE - FOLLOW
+    if (isInRange(normRadByShip, fromAngle, toAngle)) {
+
+        //TURN direction
+        if (normRadByShip < me.rotation) {
+            turnDir = -1;
         }
 
-        me.rootContainer.rotation = me.rotation;
+    } else {
+
+        //TURN direction
+        if (me.facingAngle > Math.PI) {
+            if (normRadByShip > (Math.PI * 2 - me.facingAngle) && normRadByShip < me.facingAngle) {
+                turnDir = -1;
+            }
+        } else {
+            if (normRadByShip > (Math.PI * 2 - me.facingAngle) || normRadByShip < me.facingAngle) {
+                turnDir = -1;
+            }
+        }
     }
+
+
+    rotateDiff = Math.abs(me.rotation - normRadByShip);
+
+    if (rotateDiff < me.rotateSpeed) {
+        newRotaion = me.rotation + rotateDiff * turnDir;
+    } else {
+        newRotaion = me.rotation + me.rotateSpeed * turnDir;
+    }
+
+
+    if (isInRange(newRotaion, fromAngle, toAngle)) {
+
+        me.rotation = newRotaion;
+        me.rootContainer.rotation = me.rotation;
+
+    }
+
+    me.rotationReadyToFire = Math.abs(newRotaion - normRadByShip) < me.rotateSpeed ? true : false;
+
+    /////////////////////
+
+    //////CHECK
+    //if (me.isInRotateRange(rad)) {
+
+
+    //if (me.isInRotateRange(me.rotation)) {
+
+
+    //}
+    //}
 
 
     dist = calcDistBetween2Points(me.rootShip.target.x, me.rootShip.target.y, x, y);
@@ -98,7 +180,17 @@ Cannon.prototype.update = function () {
     me.aimItem.lineTo(dist, 0);
     me.aimItem.endFill();
 
-    me.cannonTextItem.text = 'rot: ' + me.rotation.toFixed(3);
+    if (me.debug) {
+
+        me.cannonTextItem.text = 'ROT ' + me.rotation.toFixed(3) + '\n'
+            + 'RAD ' + rad.toFixed(3) + '\n'
+            + 'facing  ' + (me.facingAngle * PIXI.RAD_TO_DEG).toFixed(3) + '\n'
+            + 'rotationReadyToFire  ' + me.rotationReadyToFire + '\n'
+            + '< ' + (fromAngle * PIXI.RAD_TO_DEG).toFixed(1)
+            + ' | ' + (normRadByShip * PIXI.RAD_TO_DEG).toFixed(1)
+            + ' | ' + (toAngle * PIXI.RAD_TO_DEG).toFixed(1) + ' >';
+
+    }
 
     Cannon.superclass.update.apply(me);
 
@@ -109,6 +201,10 @@ Cannon.prototype.isInRotateRange = function (angle) {
         return true;
     }
     return false;
+};
+
+Cannon.prototype.checkCanFire = function () {
+    return this.rotationReadyToFire;
 };
 
 Cannon.prototype.fire = function () {
@@ -123,6 +219,10 @@ Cannon.prototype.fire = function () {
         targetX = me.rootShip.target.x,
         targetY = me.rootShip.target.y;
 
+    if (!me.checkCanFire()) {
+        return false;
+    }
+
     rotation = me.rotation;
 
     newXY = calcNewCoords(me.rotation, me.x, me.y);
@@ -134,9 +234,9 @@ Cannon.prototype.fire = function () {
     radNorm = rad - me.rootShip.rotation;
 
 
-    if (!me.isInRotateRange(radNorm) || !me.canFire) {
-        return false;
-    }
+    //if (!me.isInRotateRange(radNorm) || !me.canFire) {
+    //    return false;
+    //}
 
     targetX += Math.random() * me.missFactor;
     targetY += Math.random() * me.missFactor;
