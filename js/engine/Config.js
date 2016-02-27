@@ -7,7 +7,23 @@ CONFIG = {};
 
 CONFIG.battleshipConfig = {
 
+    acceleration : 0.05,
+    maxSpeed : 3,
+    rotationSpeed : 0.01,
+
     cannonsConfig: [
+        {
+            x: 100,
+            y: 0,
+            extraAngle: 90,
+            rotateSpeed : 0.01,
+            facing: 0,
+            angleRange: 30,
+            missFactor : 5,
+            rechargeTime : 3000,
+            //debug : true
+        },
+        //*
         {
             x: -100,
             y: 0,
@@ -18,6 +34,7 @@ CONFIG.battleshipConfig = {
             missFactor : 5,
             rechargeTime : 3000
         },
+
         {
             x: 40,
             y: 22,
@@ -59,6 +76,7 @@ CONFIG.battleshipConfig = {
             missFactor : 5,
             rechargeTime : 2000
         },
+        //*/
 
     ],
 

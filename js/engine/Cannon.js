@@ -36,8 +36,8 @@ function Cannon(rootShip, _config) {
     this.rechargeTime = _config.rechargeTime;
 
     this.lineColors = {
-        recharging : 0x993333,
-        ready : 0x009900
+        recharging: 0x993333,
+        ready: 0x009900
     };
 
 }
@@ -106,41 +106,23 @@ Cannon.prototype.update = function () {
 
         normRadByShip,
         newRotaion,
-        turnDir = 1;
+        turnDir = 1,
+        isInView = false;
 
     normRadByShip = radByShip < 0 ? radByShip + CONST.pi_2 : radByShip;
     normRadByShip += normRadByShip < 0 ? CONST.pi_2 : 0;
 
-    //IF WE ARE INSIDE OF WORKING ZONE - FOLLOW
-    if (isInViewDegree(normRadByShip, me.facingAngle, me.angleRange)) {
+    rotateDiff = calcShortestAngle(me.rotation, normRadByShip);
 
-        //TURN direction
-        if (normRadByShip < me.rotation) {
-            turnDir = -1;
-        }
+    if (Math.abs(rotateDiff) < me.rotateSpeed) {
 
-    }
-    //IF OUTSIDE WORKING AREA
-    else {
+        newRotaion = me.rotation + rotateDiff;
+        me.rotationReadyToFire = true;
 
-        //TURN direction
-        if (me.facingAngle > Math.PI) {
-            if (normRadByShip > (CONST.pi_2 - me.facingAngle) && normRadByShip < me.facingAngle) {
-                turnDir = -1;
-            }
-        } else {
-            if (normRadByShip > (CONST.pi_2 - me.facingAngle) || normRadByShip < me.facingAngle) {
-                turnDir = -1;
-            }
-        }
-    }
-
-    rotateDiff = Math.abs(me.rotation - normRadByShip);
-
-    if (rotateDiff < me.rotateSpeed) {
-        newRotaion = me.rotation + rotateDiff * turnDir;
     } else {
-        newRotaion = me.rotation + me.rotateSpeed * turnDir;
+
+        newRotaion = me.rotation + (rotateDiff < 0 ? -me.rotateSpeed : me.rotateSpeed);
+        me.rotationReadyToFire = false;
     }
 
 
@@ -148,10 +130,7 @@ Cannon.prototype.update = function () {
 
         me.rotation = newRotaion;
         me.rootContainer.rotation = me.rotation;
-
     }
-
-    me.rotationReadyToFire = Math.abs(newRotaion - normRadByShip) < me.rotateSpeed ? true : false;
 
 
     dist = calcDistBetween2Points(me.rootShip.target.x, me.rootShip.target.y, x, y);
@@ -167,8 +146,11 @@ Cannon.prototype.update = function () {
             + 'RAD ' + rad.toFixed(3) + '\n'
             + 'facing  ' + (me.facingAngle * PIXI.RAD_TO_DEG).toFixed(3) + '\n'
             + 'rotationReadyToFire  ' + me.rotationReadyToFire + '\n'
+            + 'rotateDiff  ' + rotateDiff.toFixed(3) + '\n'
+            + 'normRadByShip  ' + normRadByShip.toFixed(3) + '\n'
+            + 'turnDir  ' + turnDir + '\n'
 //            + '< ' + (limit1 * PIXI.RAD_TO_DEG).toFixed(1)
-            + ' | ' + (normRadByShip * PIXI.RAD_TO_DEG).toFixed(1)
+            + ' isInView ' + isInView
 //            + ' | ' + (limit2 * PIXI.RAD_TO_DEG).toFixed(1) + ' >'
         ;
 
@@ -226,7 +208,7 @@ Cannon.prototype.startRechargeBullet = function () {
 
     me.rechargingBullet = true;
 
-    setTimeout(function(){
+    setTimeout(function () {
         me.rechargingBullet = false;
         Observer.fireEvent('cannonRechargeFinished', me);
     }, me.rechargeTime);

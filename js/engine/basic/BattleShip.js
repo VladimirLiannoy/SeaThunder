@@ -34,7 +34,7 @@ function BattleShip(params) {
         y: 0
     };
 
-    this.showLiner
+    //this.showLiner = false;
 
 
 }

@@ -4,7 +4,9 @@
 
 
 CONST = {
-    pi_2: Math.PI * 2
+    pi_2: Math.PI * 2,
+    pi_3: Math.PI * 3,
+    pi: Math.PI
 };
 
 function calcNewCoords(angle, x, y) {
@@ -82,6 +84,15 @@ function detectRotateDirection(curAngle, destAngle, rotationStep) {
 
     return dir;
 }
+
+
+function calcShortestAngle(start, end){
+    //((((end - start) % 360) + 540) % 360) - 180
+    return ((((end - start) % CONST.pi_2) + CONST.pi_3) % CONST.pi_2) - CONST.pi;
+}
+
+
+
 
 //console.log(detectRotateDirection(350* PIXI.DEG_TO_RAD, 350 * PIXI.DEG_TO_RAD));
 //console.log(detectRotateDirection(0, 90 * PIXI.DEG_TO_RAD));
