@@ -50,7 +50,7 @@ UserControlShip.prototype.init = function (container) {
     me.parentContainer.addChild(me.aimItem);
     me.parentContainer.addChild(me.aimTextItem);
 
-    Observer.fireEvent('playerShipCreated', me.config);
+    Observer.fireEvent('playerShipCreated', me);
 
 };
 
