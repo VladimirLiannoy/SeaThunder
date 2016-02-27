@@ -52,6 +52,14 @@ UserControlShip.prototype.init = function (container) {
 
     Observer.fireEvent('playerShipCreated', me);
 
+    Observer.addListener('setPointerPos', function (newPos) {
+        me.setPointerPos(newPos.x, newPos.y);
+    });
+
+    Observer.addListener('playerTryFire', function () {
+        me.fireCannons();
+    });
+
 };
 
 UserControlShip.prototype.update = function () {
