@@ -82,8 +82,6 @@ Cannon.prototype.init = function (container) {
     container.addChild(me.cannonTextItem);
 
     me.setupEvents();
-
-    console.log(this);
 };
 
 Cannon.prototype.recalcRotateAngleLimit = function (angle) {
@@ -211,7 +209,7 @@ Cannon.prototype.fire = function () {
 
     me.startRechargeBullet();
 
-    Observer.fireEvent('turretFired', me);
+    Observer.fireEvent('cannonFired', me);
 };
 
 Cannon.prototype.startRechargeBullet = function () {
