@@ -5,9 +5,9 @@ var reloadedSound = new Audio('sounds/reloaded.mp3');
 
 
 Observer.addListener('turretFired', function (turret) {
-    //fireSound.cloneNode().play();
+    fireSound.cloneNode().play();
 });
 
 Observer.addListener('cannonRechargeFinished', function (turret) {
-    //reloadedSound.cloneNode().play();
+    reloadedSound.cloneNode().play();
 });
