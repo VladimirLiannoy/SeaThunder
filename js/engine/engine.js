@@ -6,13 +6,13 @@ var GAME_CONFIG = {
     minScale: 0.2,
     scaleStep: 0.1,
     mapDrag: {
-        state : false,
-        x : 0,
-        y : 0
+        state: false,
+        x: 0,
+        y: 0
     },
-    gameField : {
-        width : 10000,
-        height : 10000
+    gameField: {
+        width: 10000,
+        height: 10000
     }
 };
 
@@ -25,15 +25,25 @@ stats.domElement.style.top = "0px";
 stats.domElement.style.left = "0px";
 document.body.appendChild(stats.domElement);
 
+
 // create the root of the scene graph
+var mainContainer = new PIXI.Container();
+
 var stage = new PIXI.Container();
+
+mainContainer.addChild(stage);
+
+var gameGUI = new GUI(mainContainer, GAME_CONFIG);
+
+
+//var map = new Map(renderer, stage, GAME_CONFIG);
+
 
 var seatTileTexture = PIXI.Texture.fromImage('images/sea-mapx.jpg');
 var tilingSprite = new PIXI.extras.TilingSprite(seatTileTexture, GAME_CONFIG.gameField.width, GAME_CONFIG.gameField.height);
-tilingSprite.position.x = -GAME_CONFIG.gameField.width/2;
-tilingSprite.position.y = -GAME_CONFIG.gameField.height/2;
+//tilingSprite.position.x = -GAME_CONFIG.gameField.width/2;
+//tilingSprite.position.y = -GAME_CONFIG.gameField.height/2;
 stage.addChild(tilingSprite);
-
 
 
 var ship = new UserControlShip(CONFIG.battleshipConfig);
@@ -45,8 +55,6 @@ ship.y = 500;
 //ship2.init(stage);
 //ship2.x = 800;
 //ship2.y = 650;
-
-
 
 
 // start animating
@@ -62,9 +70,11 @@ function animate() {
     ship.update();
     //ship2.update();
 
-    renderer.render(stage);
+    renderer.render(mainContainer);
     stats.end();
 }
+
+var focusX, focusY, focusX1, focusY1;
 
 renderer.view.addEventListener('mousemove', function (event) {
 
@@ -97,7 +107,7 @@ renderer.view.addEventListener('mousedown', function (event) {
     console.log(event);
 });
 
-addEventListener("contextmenu", function (event) {
+window.addEventListener("contextmenu", function (event) {
     event.preventDefault();
 }, true);
 
@@ -118,9 +128,10 @@ document.addEventListener('keyup', function (event) {
 });
 
 document.addEventListener("wheel", function (event) {
-    var delta = event.deltaY, zoomDir, previousScale = GAME_CONFIG.scale,
-        scaleXPecentage = event.offsetX / GAME_CONFIG.width,
-        scaleYPecentage = event.offsetY / GAME_CONFIG.height;
+    var delta = event.deltaY,
+        previousScale = GAME_CONFIG.scale,
+x = event.offsetX,
+        y = event.offsetY;
 
     if (delta > 0 && GAME_CONFIG.scale > GAME_CONFIG.minScale) {
         GAME_CONFIG.scale -= GAME_CONFIG.scaleStep;
@@ -130,11 +141,22 @@ document.addEventListener("wheel", function (event) {
         GAME_CONFIG.scale += GAME_CONFIG.scaleStep;
     }
 
+
+    var worldPos = {
+        x: (x - stage.position.x) / previousScale,
+        y: (y - stage.position.y) / previousScale
+    };
+
+    var newScreenPos = {
+        x: (worldPos.x ) * GAME_CONFIG.scale + stage.position.x,
+        y: (worldPos.y) * GAME_CONFIG.scale + stage.position.y
+    };
+
+    stage.position.x -= (newScreenPos.x - x);
+    stage.position.y -= (newScreenPos.y - y);
+
     stage.scale.x = GAME_CONFIG.scale;
     stage.scale.y = GAME_CONFIG.scale;
-
-    stage.position.x += (GAME_CONFIG.width * previousScale - GAME_CONFIG.width * GAME_CONFIG.scale) * scaleXPecentage;
-    stage.position.y += (GAME_CONFIG.height * previousScale - GAME_CONFIG.height * GAME_CONFIG.scale) * scaleYPecentage;
 
     setTargetPosition(event.offsetX, event.offsetY);
 

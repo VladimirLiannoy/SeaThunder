@@ -26,12 +26,15 @@ function Cannon(rootShip, _config) {
 
     this.angleRange = _config.angleRange * PIXI.DEG_TO_RAD;
 
+    this.fireRange = _config.fireRange;
+
     this.missFactor = _config.missFactor;
 
     this.rootShip = rootShip;
 
+    /////////////////////////////////
+    this.inFireRange = false;
     this.rotationReadyToFire = false;
-
     this.rechargingBullet = false;
     this.rechargeTime = _config.rechargeTime;
 
@@ -101,7 +104,8 @@ Cannon.prototype.update = function () {
         rad = calcAngleBetween2Points(x, y, targetVector.x, targetVector.y),
         radByShip = rad - sysRotation % CONST.pi_2,
 
-        dist,
+        targetDist = calcDistBetween2Points(me.rootShip.target.x, me.rootShip.target.y, x, y),
+
         rotateDiff,
 
         normRadByShip,
@@ -132,12 +136,19 @@ Cannon.prototype.update = function () {
         me.rootContainer.rotation = me.rotation;
     }
 
+    ///////
+    if(targetDist > me.fireRange){
+        targetDist = me.fireRange;
+        me.inFireRange = false;
+    } else {
+        me.inFireRange = true;
+    }
+    ///////
 
-    dist = calcDistBetween2Points(me.rootShip.target.x, me.rootShip.target.y, x, y);
     me.aimItem.clear();
     me.aimItem.lineStyle(5, (me.rechargingBullet || !me.rotationReadyToFire) ? me.lineColors['recharging'] : me.lineColors['ready']);
     me.aimItem.moveTo(0, 0);
-    me.aimItem.lineTo(dist, 0);
+    me.aimItem.lineTo(targetDist, 0);
     me.aimItem.endFill();
 
     if (me.debug) {
@@ -161,7 +172,7 @@ Cannon.prototype.update = function () {
 };
 
 Cannon.prototype.checkCanFire = function () {
-    return this.rotationReadyToFire && !this.rechargingBullet;
+    return this.rotationReadyToFire && !this.rechargingBullet && this.inFireRange;
 };
 
 Cannon.prototype.fire = function () {

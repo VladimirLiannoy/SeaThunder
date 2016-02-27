@@ -14,12 +14,15 @@ function Bullet(x, y, targetX, targetY, missFactor) {
     this.reachTargetRadius = 10;
     this.targetReached = false;
     this.parentContainer = null;
+    this.missFactor = missFactor;
 
 }
 
 Bullet.prototype.init = function (container) {
     var me = this;
 
+    me.target.x += Math.random() * me.missFactor - me.missFactor / 2;
+    me.target.y += Math.random() * me.missFactor - me.missFactor / 2;
     me.rotation = calcAngleBetween2Points(me.x, me.y, me.target.x, me.target.y);
 
     me.bulletItem = new PIXI.Graphics();
@@ -32,6 +35,8 @@ Bullet.prototype.init = function (container) {
     me.bulletItem.beginFill(0xf3a33f);
     me.bulletItem.drawCircle(0, 0, 10);
     me.bulletItem.endFill();
+
+
 
 };
 
@@ -58,6 +63,7 @@ Bullet.prototype.update = function () {
     }
 };
 
-Bullet.prototype.onTargetReached = function () {};
+Bullet.prototype.onTargetReached = function () {
+};
 
 extend(Bullet, VisualEntity);

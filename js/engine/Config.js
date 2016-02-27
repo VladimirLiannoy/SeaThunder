@@ -21,6 +21,7 @@ CONFIG.battleshipConfig = {
             angleRange: 30,
             missFactor : 5,
             rechargeTime : 3000,
+            fireRange : 3000
             //debug : true
         },
         //*
@@ -32,7 +33,8 @@ CONFIG.battleshipConfig = {
             facing: 180,
             angleRange: 90,
             missFactor : 5,
-            rechargeTime : 3000
+            rechargeTime : 3000,
+            fireRange : 3000
         },
 
         {
@@ -43,7 +45,8 @@ CONFIG.battleshipConfig = {
             facing: 90,
             angleRange: 45,
             missFactor : 5,
-            rechargeTime : 2000
+            rechargeTime : 2000,
+            fireRange : 3000
         },
         {
             x: -40,
@@ -53,7 +56,8 @@ CONFIG.battleshipConfig = {
             facing: 90,
             angleRange: 45,
             missFactor : 5,
-            rechargeTime : 2000
+            rechargeTime : 2000,
+            fireRange : 3000
         },
 
         {
@@ -64,7 +68,8 @@ CONFIG.battleshipConfig = {
             facing: 270,
             angleRange: 45,
             missFactor : 5,
-            rechargeTime : 2000
+            rechargeTime : 2000,
+            fireRange : 3000
         },
         {
             x: -40,
@@ -74,7 +79,8 @@ CONFIG.battleshipConfig = {
             facing: 270,
             angleRange: 45,
             missFactor : 5,
-            rechargeTime : 2000
+            rechargeTime : 2000,
+            fireRange : 3000
         },
         //*/
 
