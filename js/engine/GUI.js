@@ -78,7 +78,7 @@ function GUI(container, gameConfig) {
     };
 
     Observer.addListener('playerShipCreated', me.initCannons);
-    Observer.addListener('turretFired', me.onCannonFired);
+    Observer.addListener('cannonFired', me.onCannonFired);
     Observer.addListener('cannonRechargeFinished', me.onCannonRecharged);
 
 
