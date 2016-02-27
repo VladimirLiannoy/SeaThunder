@@ -41,10 +41,10 @@ ship.init(stage);
 ship.x = 500;
 ship.y = 500;
 
-//var ship2 = new UserControlShip(CONFIG.battleshipConfig);
-//ship2.init(stage);
-//ship2.x = 800;
-//ship2.y = 650;
+var ship2 = new BattleShip(CONFIG.battleshipConfig);
+ship2.init(stage);
+ship2.x = 800;
+ship2.y = 650;
 
 
 
@@ -60,7 +60,7 @@ function animate() {
 
     // render the container
     ship.update();
-    //ship2.update();
+    ship2.update();
 
     renderer.render(stage);
     stats.end();

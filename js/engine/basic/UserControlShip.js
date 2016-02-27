@@ -26,7 +26,29 @@ function UserControlShip(params){
         }
     };
 
+    this.aimItem = null;
+
+    this.aimTextItem = null;
+
 }
+
+UserControlShip.prototype.init = function (container) {
+  var me = this;
+
+    UserControlShip.superclass.init.call(me, container);
+
+    me.aimItem = new PIXI.Graphics();
+    me.aimItem.alpha = 0.5;
+
+    me.aimTextItem = new PIXI.Text('', {font: '15px Arial', fill: 'red'}, 2);
+    me.aimTextItem.position = new PIXI.Point(0, 0);
+    me.aimTextItem.anchor.x = 0.5;
+    me.aimTextItem.anchor.y = 0;
+
+    me.parentContainer.addChild(me.aimItem);
+    me.parentContainer.addChild(me.aimTextItem);
+
+};
 
 UserControlShip.prototype.update = function () {
   var me = this;
@@ -34,6 +56,18 @@ UserControlShip.prototype.update = function () {
     me.processControls();
 
     UserControlShip.superclass.update.call(me);
+
+    me.aimItem.clear();
+    me.aimItem.lineStyle(10, 0x003300);
+    me.aimItem.moveTo(me.x, me.y);
+    me.aimItem.lineTo(me.target.x, me.target.y);
+    me.aimItem.endFill();
+
+    me.aimTextItem.position.x = me.target.x;
+    me.aimTextItem.position.y = me.target.y + 30;
+    //me.aimTextItem.text = 'W_ROT: ' + W_ROT.toFixed(3) + '\n'
+    //    + 'S_ROT: ' + me.rotation.toFixed(3) + '\n'
+    //    + 'WS_ROT: ' + (W_ROT - me.rotation).toFixed(3);
 };
 
 UserControlShip.prototype.processControls = function () {

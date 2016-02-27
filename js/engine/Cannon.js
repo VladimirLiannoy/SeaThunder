@@ -61,8 +61,8 @@ Cannon.prototype.init = function (container) {
     me.aimItem = new PIXI.Graphics();
     me.aimItem.alpha = 0.5;
 
-    me.rootContainer.addChild(me.cannonItem);
     me.rootContainer.addChild(me.aimItem);
+    me.rootContainer.addChild(me.cannonItem);
 
     me.cannonTextItem = new PIXI.Text('', {
         font: '15px Arial',
@@ -156,7 +156,7 @@ Cannon.prototype.update = function () {
 
     dist = calcDistBetween2Points(me.rootShip.target.x, me.rootShip.target.y, x, y);
     me.aimItem.clear();
-    me.aimItem.lineStyle(10, me.rechargingBullet ? me.lineColors['recharging'] : me.lineColors['ready']);
+    me.aimItem.lineStyle(5, (me.rechargingBullet || !me.rotationReadyToFire) ? me.lineColors['recharging'] : me.lineColors['ready']);
     me.aimItem.moveTo(0, 0);
     me.aimItem.lineTo(dist, 0);
     me.aimItem.endFill();
