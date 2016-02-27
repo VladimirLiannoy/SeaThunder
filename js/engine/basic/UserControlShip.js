@@ -30,6 +30,8 @@ function UserControlShip(params){
 
     this.aimTextItem = null;
 
+    this.config = params;
+
 }
 
 UserControlShip.prototype.init = function (container) {
@@ -47,6 +49,8 @@ UserControlShip.prototype.init = function (container) {
 
     me.parentContainer.addChild(me.aimItem);
     me.parentContainer.addChild(me.aimTextItem);
+
+    Observer.fireEvent('playerShipCreated', me.config);
 
 };
 

@@ -11,8 +11,8 @@ var GAME_CONFIG = {
         y: 0
     },
     gameField: {
-        width: 10000,
-        height: 10000
+        width: 15000,
+        height: 15000
     }
 };
 
@@ -41,8 +41,6 @@ var gameGUI = new GUI(mainContainer, GAME_CONFIG);
 
 var seatTileTexture = PIXI.Texture.fromImage('images/sea-mapx.jpg');
 var tilingSprite = new PIXI.extras.TilingSprite(seatTileTexture, GAME_CONFIG.gameField.width, GAME_CONFIG.gameField.height);
-//tilingSprite.position.x = -GAME_CONFIG.gameField.width/2;
-//tilingSprite.position.y = -GAME_CONFIG.gameField.height/2;
 stage.addChild(tilingSprite);
 
 
@@ -50,6 +48,8 @@ var ship = new UserControlShip(CONFIG.battleshipConfig);
 ship.init(stage);
 ship.x = 500;
 ship.y = 500;
+
+
 
 //var ship2 = new BattleShip(CONFIG.battleshipConfig);
 //ship2.init(stage);
@@ -63,8 +63,6 @@ function animate() {
     stats.begin();
     requestAnimationFrame(animate);
 
-    // just for fun, let's rotate mr rabbit a little
-    //ship.rotation += 0.01;
 
     // render the container
     ship.update();
@@ -74,7 +72,24 @@ function animate() {
     stats.end();
 }
 
-var focusX, focusY, focusX1, focusY1;
+function correctStage() {
+
+    if (stage.position.x > 0) {
+        stage.position.x = 0;
+    }
+
+    if (stage.position.x < -GAME_CONFIG.gameField.width * GAME_CONFIG.scale + GAME_CONFIG.width) {
+        stage.position.x = -GAME_CONFIG.gameField.width * GAME_CONFIG.scale + GAME_CONFIG.width;
+    }
+
+    if (stage.position.y > 0) {
+        stage.position.y = 0;
+    }
+
+    if (stage.position.y < -GAME_CONFIG.gameField.height * GAME_CONFIG.scale + GAME_CONFIG.height) {
+        stage.position.y = -GAME_CONFIG.gameField.height * GAME_CONFIG.scale + GAME_CONFIG.height;
+    }
+}
 
 renderer.view.addEventListener('mousemove', function (event) {
 
@@ -83,6 +98,9 @@ renderer.view.addEventListener('mousemove', function (event) {
         stage.position.y += event.offsetY - GAME_CONFIG.mapDrag.y;
         GAME_CONFIG.mapDrag.x = event.offsetX;
         GAME_CONFIG.mapDrag.y = event.offsetY;
+
+        correctStage();
+
     } else {
         setTargetPosition(event.offsetX, event.offsetY);
     }
@@ -130,7 +148,7 @@ document.addEventListener('keyup', function (event) {
 document.addEventListener("wheel", function (event) {
     var delta = event.deltaY,
         previousScale = GAME_CONFIG.scale,
-x = event.offsetX,
+        x = event.offsetX,
         y = event.offsetY;
 
     if (delta > 0 && GAME_CONFIG.scale > GAME_CONFIG.minScale) {
@@ -157,6 +175,8 @@ x = event.offsetX,
 
     stage.scale.x = GAME_CONFIG.scale;
     stage.scale.y = GAME_CONFIG.scale;
+
+    correctStage();
 
     setTargetPosition(event.offsetX, event.offsetY);
 
