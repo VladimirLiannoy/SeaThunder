@@ -10,6 +10,7 @@ CONFIG.battleshipConfig = {
     acceleration : 0.05,
     maxSpeed : 3,
     rotationSpeed : 0.01,
+    health : 20000,
 
     cannonsConfig: [
         {

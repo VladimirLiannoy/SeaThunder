@@ -19,6 +19,9 @@ function BattleShip(params) {
     this.torpedoGatewaysConfig = params.torpedoGatewaysConfig ? params.torpedoGatewaysConfig : [];
     this.turretsConfig = params.turretsConfig ? params.turretsConfig : [];
 
+    this.health = params.health;
+    this.maxHealth = params.health;
+
     this.x = 0;
     this.y = 0;
     this.rotation = 0;

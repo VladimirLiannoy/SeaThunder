@@ -16,8 +16,12 @@ var GAME_CONFIG = {
     }
 };
 
+Service('GAMECONFIG', GAME_CONFIG);
+
 var renderer = PIXI.autoDetectRenderer(GAME_CONFIG.width, GAME_CONFIG.height, {backgroundColor: 0x1099bb});
 document.body.appendChild(renderer.view);
+
+Service('renderer', renderer);
 
 stats = new Stats();
 stats.domElement.style.position = "absolute";
