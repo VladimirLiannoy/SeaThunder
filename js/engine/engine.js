@@ -36,6 +36,7 @@ var mainContainer = new PIXI.Container();
 
 
 
+var game = new Game();
 
 
 
@@ -45,14 +46,15 @@ map.init(mainContainer);
 var gameGUI = new GUI(mainContainer, GAME_CONFIG);
 
 
-
-
-
-
 var ship = new UserControlShip(CONFIG.battleshipConfig);
 ship.init(map.getShipsContainer());
 ship.x = 500;
 ship.y = 500;
+
+
+game.addChild(map);
+game.addChild(ship);
+game.addChild(gameGUI);
 
 
 
@@ -70,7 +72,7 @@ function animate() {
 
 
     // render the container
-    ship.update();
+    game.update();
     //ship2.update();
 
     renderer.render(mainContainer);

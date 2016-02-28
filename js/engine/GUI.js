@@ -1,5 +1,8 @@
 function GUI(container, gameConfig) {
     var me = this;
+
+    GUI.superclass.constructor.apply(me, {});
+
     this.cannonIndicatorsArray = [];
 
     this.width = 300;
@@ -134,5 +137,13 @@ function GUI(container, gameConfig) {
     Observer.addListener('cannonFired', me.onCannonFired);
     Observer.addListener('cannonRechargeFinished', me.onCannonRecharged);
 
+    this.update = function(){
+
+        GUI.superclass.update.apply(me);
+
+
+    };
 
 }
+
+extend(GUI, VisualEntity);
