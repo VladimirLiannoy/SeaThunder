@@ -34,17 +34,15 @@ document.body.appendChild(stats.domElement);
 // create the root of the scene graph
 var mainContainer = new PIXI.Container();
 
-
-
 var game = new Game();
 
 
 
-var map = new GameMap(mainContainer);
+var map = new GameMap();
 map.init(mainContainer);
 
-var gameGUI = new GUI(mainContainer, GAME_CONFIG);
-
+var gameGUI = new GUI();
+gameGUI.init(mainContainer, GAME_CONFIG);
 
 var ship = new UserControlShip(CONFIG.battleshipConfig);
 ship.init(map.getShipsContainer());
